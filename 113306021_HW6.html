@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        input, button {
+            margin: 10px;
+        }
+        #resultList{
+            list-style: none;
+        }
+        h1,h3{
+            color: royalblue;
+        }
+    </style>
+</head>
+<body>
+	<h1>113306021_HW6_1A2B</h1>
+    <div>
+        <input type="text" id="input" placeholder="輸入四個不重覆數字">
+        <button onclick="checkGuess()">這次肯定對</button>
+    </div>
+    <div id="error" style="color: blue;"></div>
+    <div id="result">
+        <h3>來看看你猜得如何:</h3>
+        <ul id="resultList"></ul>
+    </div>
+    <script>
+    	function generateAnswer() {
+        	var digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        	var answer = [];
+        	while (answer.length < 4) {
+            	var choice = Math.floor(Math.random() * digits.length);
+            	answer.push(digits[choice]);
+            	digits.splice(choice, 1);
+        	}
+        	return answer.join('');
+    	}
+
+    	var answer = generateAnswer();
+    	var attempts = 0;
+
+    	function checkGuess(){
+    		var inputField = document.getElementById("input");
+			var guess = inputField.value;
+			var errorField = document.getElementById("error");
+			var resultList = document.getElementById("resultList");
+
+			errorField.innerHTML = "下次一定！";
+
+			if (guess.length !== 4 || isNaN(guess)) {
+            errorField.innerHTML = "就跟你說四個了！";
+            return;
+        	}
+
+        	for (var i = 0; i < guess.length; i++) {
+            	if (guess.indexOf(guess[i]) !== i) {
+                	errorField.innerHTML = "就跟你說不能重複！";
+                	return;
+            	}
+        	}
+        attempts++;
+
+        var A = 0, B = 0;
+        for (var i = 0; i < 4; i++) {
+            if (guess[i] === answer[i]) {
+                A++;
+            } else if (answer.indexOf(guess[i]) !== -1) {
+                B++;
+            }
+        }
+
+        var listItem = document.createElement("li");
+        listItem.innerHTML = guess + " => " + A + "A" + B + "B";
+        resultList.appendChild(listItem);
+
+        if (A === 4) {
+            alert("花了" + attempts + "次猜對挺不錯的");
+            inputField.disabled = true;
+            document.querySelector("button").disabled = true;
+        }
+        inputField.value = '';
+    	}
+    </script>
+</body>
+</html>
